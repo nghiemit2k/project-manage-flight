@@ -15,21 +15,34 @@
         {% if current_user.is_authenticated %}
         <li class="nav-item">
             <a class="nav-link text-danger" href="{{ url_for('index')}}">
-                {{ current_user.email}}
+                Chào {{ current_user.name}}
               </a>
         </li>
         <li class="nav-item">
-        <a class="nav-link text-danger" href="{{ url_for('user_signout')}}">dang xuat</a>
+        <a class="nav-link text-danger" href="{{ url_for('user_signout')}}">Đăng xuất</a>
       </li>
 
         {% else %}
            <li class="nav-item">
-            <a class="nav-link text-danger" href="{{ url_for('user_register')}}">dang ki</a>
+            <a class="nav-link text-danger" href="{{ url_for('user_register')}}">Đăng kí</a>
           </li>
              <li class="nav-item">
-            <a class="nav-link text-danger" href="{{ url_for('user_signin')}}">dang nhap</a>
+            <a class="nav-link text-danger" href="{{ url_for('user_signin')}}">Đăng nhập</a>
           </li>
          {% endif %}
+        {% if current_user.is_authenticated and current_user.user_role.value != 2 %}
+        <li class="nav-item">
+            <a class="nav-link text-danger" href="/bookTicket">Đặt vé</a>
+        </li>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.user_role.value != 3 %}
+        <li class="nav-item">
+            <a class="nav-link text-danger" href="/sellTicket">Bán vé</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-danger" href="/createFlightCalendar">Lập lịch chuyến bay</a>
+        </li>
+        {% endif %}
     </ul>
   </div>
   <form class="form-inline">

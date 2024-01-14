@@ -1,0 +1,49 @@
+{% extends 'layout/base.html' %}
+{% block title %}Đặt vé{% endblock %}
+{% block js%}
+    <script src="{{ url_for('static', filename='js/bookTicket.js')}}"></script>
+{% endblock%}
+{% block content %}
+<div>
+    {{ticket}}
+    <h1 class="text-info text-center mt-1">TRANG ĐẶT VÉ</h1>
+    <label for="flight" class="form-label">Chuyến bay bạn chọn:</label>
+    <input class="form-control" list="flights" name="flight" id="flight" value="{{ticket.flight_name}}"
+    onblur="choose(this)">
+    <datalist id="flights">
+        {% for f in flight %}
+        <option value="{{f.name}}">
+            {% endfor %}
+    </datalist>
+    <label for="ticket_class" class="form-label">Hạng vé bạn muốn:</label>
+    <input class="form-control" list="ticket_classes" name="ticket_class"
+           id="ticket_class" value="{{ticket.ticket_class_name}}" onblur="choose(this)">
+    <datalist id="ticket_classes">
+        {% for tc in ticket_class %}
+        <option value="{{tc.name}}">
+            {% endfor %}
+    </datalist>
+    <label for="quantity" class="mt-2">Số lượng vé muốn mua:</label>
+    <input type="number" class="form-control" id="quantity" name="quantity" onblur="choose(this)"
+           value="{{ticket.quantity}}" required>
+    {% for row in range(0, ticket.quantity // 4 + 1)%}
+    <div class="row">
+        {% for q in range(0, 4 if 4 < ticket.quantity - 4 * row else ticket.quantity - 4 * row) %}
+        <div class="col-md col-xs-12">
+            <label for="seat{{row * 4 + loop.index}}" class="mt-2">Vị trí ngồi của vé thứ {{row * 4 +
+                loop.index}}:</label>
+            <select class="form-select" id="seat{{row * 4 + loop.index}}" name="seat">
+                {% for tc in range(ticket.quantity_seat) %}
+                <option>{{ticket.ticket_class_name[0]}}{{tc + 1}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <div class="mt-2">Tiền mặc định mỗi vé: <span id="price">{{ticket.price}}</span> VNĐ</div>
+    <div class="mt-2">Nhận được ưu đãi: <span id="discount">{{ticket.discount}}</span> VNĐ</div>
+    <div class="mt-2">Tổng số tiền phải trả: {{(ticket.price - ticket.discount) * ticket.quantity}} VNĐ</div>
+    <input type="button" value="Xác nhận" class="btn btn-danger mb-2" onclick="pay()">
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'layout/base.html'%}
+{% block title %}Bán vé{% endblock %}
+{% block js%}
+    <script src="{{ url_for('static', filename='js/sellTicket.js')}}"></script>
+{% endblock%}
+{% block content %}
+<form method="post" class="was-validated">
+    <div class="mb-3 mt-3">
+        <label for="flight" class="form-label">Chuyến bay khách hàng chọn:</label>
+        <input class="form-control" list="flights" name="flight" id="flight" value="{{ticket.flight_name}}"
+               onblur="choose(this)">
+        <datalist id="flights">
+            {% for f in flight %}
+            <option id="flight{{f.id}}" value="{{f.name}}">
+                {% endfor %}
+        </datalist>
+    </div>
+    <div class="mb-3">
+        <label for="ticket_class" class="form-label">Hạng vé khách hàng chọn:</label>
+        <input class="form-control" list="ticketClasses" name="flight" id="ticket_class" value="{{ticket.ticket_class_name}}"
+               onblur="choose(this)">
+        <datalist id="ticketClasses">
+            {% for tc in ticket_class %}
+            <option value="{{tc.name}}">
+                {% endfor %}
+        </datalist>
+    </div>
+    <div class="mb-3">
+        <label for="pwd" class="form-label">Tên khách hàng:</label>
+        <input type="text" class="form-control" id="pwd" placeholder="Ví dụ: Nguyễn Văn A" name="name" required>
+        <div class="invalid-feedback">Không được để trống trường này</div>
+    </div>
+    <div class="mb-3">
+        <label for="CCCD" class="form-label">CCCD của khách hàng:</label>
+        <input type="text" class="form-control" id="CCCD" placeholder="Ví dụ: 000000000000" name="CCCD" required>
+        <div class="invalid-feedback">Không được để trống trường này</div>
+    </div>
+    <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Số điện thoại khách hàng:</label>
+        <input type="text" class="form-control" id="phoneNumber" placeholder="Ví dụ: 0123456789" name="phoneNumber"
+               required>
+        <div class="invalid-feedback">Không được để trống trường này</div>
+    </div>
+    <div class="mb-3">
+        <div>Số tiền khách hàng phải trả là:
+            {% if ticket.discount == 0 %}
+                <span id="price"> {{'{:,.0f}'.format(ticket.price)}} </span>
+            {% else %}
+            <del>{{'{:,.0f}'.format(ticket.price)}}</del> (<span id="price">{{'{:,.0f}'.format(ticket.price - ticket.discount)}}</span>)
+            {% endif %}
+         VNĐ</div>
+    </div>
+    <button type="button" class="btn btn-primary mb-3" onclick="printTicket()">Xuất vé</button>
+</form>
+{% endblock %}
